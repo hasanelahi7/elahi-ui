@@ -91,7 +91,7 @@ export type ButtonProps<C extends React.ElementType = 'button'> =
  * <Button loading>Loading...</Button>
  * <Button as="a" href="/link">Link Button</Button>
  */
-export const Button = forwardRef(
+export const Button = (forwardRef as any)(
   <C extends React.ElementType = 'button'>(
     {
       as,
@@ -165,12 +165,9 @@ export const Button = forwardRef(
       </Component>
     )
   }
-) as {
-  <C extends React.ElementType = 'button'>(
-    props: ButtonProps<C>
-  ): React.ReactElement
-  displayName?: string
-}
+) as (<C extends React.ElementType = 'button'>(
+  props: ButtonProps<C> & { ref?: PolymorphicRef<C> }
+) => React.ReactElement | null) & { displayName?: string }
 
 Button.displayName = 'Button'
 

@@ -9,7 +9,7 @@ A modern, accessible React component library built with TypeScript and Tailwind 
 
 - **15 Production-Ready Components** - Modern, clean UI components
 - **Full TypeScript Support** - Complete type safety and IntelliSense
-- ♿ **Accessibility First** - WCAG compliant with proper ARIA attributes
+- **Accessibility First** - WCAG compliant with proper ARIA attributes
 - **Dark Mode Built-in** - Seamless theme switching
 - **Tree-Shakeable** - Only import what you need
 - **Custom Hooks** - Reusable hooks for common patterns
