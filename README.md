@@ -39,14 +39,17 @@ npx tailwindcss init -p
 
 **Option A: Using Preset (Recommended)**
 
-Import the elahi-ui Tailwind preset in your `tailwind.config.js`:
+Import the elahi-ui Tailwind preset in your `tailwind.config.js` and ensure Tailwind scans the library's files for classes:
 
 ```js
 import elahiPreset from 'elahi-ui/tailwind'
 
 export default {
   presets: [elahiPreset],
-  content: ['./src/**/*.{js,ts,jsx,tsx}'],
+  content: [
+    './src/**/*.{js,ts,jsx,tsx}',
+    './node_modules/elahi-ui/dist/**/*.{js,mjs}', // Make sure to include elahi-ui
+  ],
   // Your custom config here
 }
 ```

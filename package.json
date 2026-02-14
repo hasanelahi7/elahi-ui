@@ -1,6 +1,6 @@
 {
   "name": "elahi-ui",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A flexible, accessible, modern React component library with TypeScript",
   "type": "module",
   "main": "./dist/index.cjs",
