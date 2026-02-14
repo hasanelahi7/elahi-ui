@@ -1,0 +1,37 @@
+{
+  "name": "elahi-ui - Modern React Component Library",
+  "short_name": "elahi-ui",
+  "description": "A flexible, accessible, modern React component library built with TypeScript and Tailwind CSS. 15+ production-ready components with dark mode support.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["development", "developer tools", "utilities"],
+  "shortcuts": [
+    {
+      "name": "View Components",
+      "url": "/components",
+      "description": "Browse all available components"
+    },
+    {
+      "name": "Documentation",
+      "url": "/docs",
+      "description": "Read the documentation"
+    }
+  ]
+}
