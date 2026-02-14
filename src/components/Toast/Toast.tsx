@@ -1,5 +1,8 @@
-import React, { createContext, useContext, useState, useCallback } from 'react'
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react'
 import { cn } from '@/utils/cn'
+import { generateId } from '@/utils/id'
+import { ANIMATION_DURATION } from '@/constants'
+import { CheckIcon, AlertCircleIcon, AlertTriangleIcon, InfoIcon, CloseIcon } from '@/components/Icons'
 
 export interface Toast {
   id: string
@@ -30,23 +33,34 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [toasts, setToasts] = useState<Toast[]>([])
 
+  const removeToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id))
+  }, [])
+
   const addToast = useCallback((toast: Omit<Toast, 'id'>) => {
-    const id = Math.random().toString(36).substring(2, 9)
+    const id = generateId('toast')
     const newToast = { ...toast, id }
 
     setToasts((prev) => [...prev, newToast])
 
-    const duration = toast.duration ?? 5000
+    const duration = toast.duration ?? ANIMATION_DURATION.TOAST_DEFAULT
     if (duration > 0) {
       setTimeout(() => {
         removeToast(id)
       }, duration)
     }
-  }, [])
+  }, [removeToast])
 
-  const removeToast = useCallback((id: string) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id))
-  }, [])
+  // Listen for custom toast events (for imperative toast API)
+  useEffect(() => {
+    const handleToastEvent = (e: Event) => {
+      const customEvent = e as CustomEvent
+      addToast(customEvent.detail)
+    }
+
+    window.addEventListener('toast', handleToastEvent)
+    return () => window.removeEventListener('toast', handleToastEvent)
+  }, [addToast])
 
   return (
     <ToastContext.Provider value={{ toasts, addToast, removeToast }}>
@@ -74,64 +88,43 @@ interface ToastItemProps {
 }
 
 const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
-  const variantStyles = {
-    default: 'bg-background/95 border-border backdrop-blur-sm',
-    success: 'bg-background/95 border-green-300 dark:border-green-800/70 backdrop-blur-sm',
-    error: 'bg-background/95 border-red-300 dark:border-red-800/70 backdrop-blur-sm',
-    warning: 'bg-background/95 border-amber-300 dark:border-amber-800/70 backdrop-blur-sm',
-    info: 'bg-background/95 border-blue-300 dark:border-blue-800/70 backdrop-blur-sm',
+  const variantStyles: Record<Toast['variant'] & string, string> = {
+    default: 'bg-popover border-border backdrop-blur-sm shadow-xl',
+    success: 'bg-popover border-green-300 dark:border-green-700 backdrop-blur-sm shadow-xl',
+    error: 'bg-popover border-red-300 dark:border-red-700 backdrop-blur-sm shadow-xl',
+    warning: 'bg-popover border-amber-300 dark:border-amber-700 backdrop-blur-sm shadow-xl',
+    info: 'bg-popover border-blue-300 dark:border-blue-700 backdrop-blur-sm shadow-xl',
   }
 
-  const iconContainerStyles = {
+  const iconContainerStyles: Record<string, string> = {
     success: 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400',
     error: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',
     warning: 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400',
     info: 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
   }
 
-  const variantIcons = {
-    success: (
-      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="20 6 9 17 4 12" />
-      </svg>
-    ),
-    error: (
-      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <line x1="15" y1="9" x2="9" y2="15" />
-        <line x1="9" y1="9" x2="15" y2="15" />
-      </svg>
-    ),
-    warning: (
-      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-        <line x1="12" y1="9" x2="12" y2="13" />
-        <line x1="12" y1="17" x2="12.01" y2="17" />
-      </svg>
-    ),
-    info: (
-      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <line x1="12" y1="16" x2="12" y2="12" />
-        <line x1="12" y1="8" x2="12.01" y2="8" />
-      </svg>
-    ),
-    default: null,
+  const variantIcons: Record<string, React.ReactNode> = {
+    success: <CheckIcon className="h-4 w-4" />,
+    error: <AlertCircleIcon className="h-4 w-4" />,
+    warning: <AlertTriangleIcon className="h-4 w-4" />,
+    info: <InfoIcon className="h-4 w-4" />,
   }
+
+  const variant = toast.variant || 'default'
 
   return (
     <div
       className={cn(
         'pointer-events-auto flex items-start gap-3 rounded-xl border p-4 shadow-lg shadow-black/5 animate-slide-in-from-bottom',
-        variantStyles[toast.variant || 'default']
+        variantStyles[variant]
       )}
     >
-      {toast.variant && toast.variant !== 'default' && (
+      {variant !== 'default' && iconContainerStyles[variant] && (
         <div className={cn(
           'shrink-0 rounded-lg p-1.5',
-          iconContainerStyles[toast.variant]
+          iconContainerStyles[variant]
         )}>
-          {variantIcons[toast.variant]}
+          {variantIcons[variant]}
         </div>
       )}
 
@@ -151,26 +144,16 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onClose }) => {
       <button
         onClick={onClose}
         className="shrink-0 rounded-md p-1 text-foreground/40 transition-colors hover:text-foreground/60 hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
+        aria-label="Close notification"
       >
-        <svg
-          className="h-4 w-4"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <line x1="18" y1="6" x2="6" y2="18" />
-          <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
+        <CloseIcon className="h-4 w-4" />
         <span className="sr-only">Close</span>
       </button>
     </div>
   )
 }
 
-// Helper function for quick toast
+// Helper function for quick toast (imperative API)
 export const toast = {
   success: (title: string, description?: string) => {
     const event = new CustomEvent('toast', {

@@ -1,6 +1,8 @@
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/utils/cn'
+import { useRipple } from '@/hooks'
+import { SpinnerIcon } from '@/components/Icons'
 import type {
   PolymorphicComponentPropsWithRef,
   PolymorphicRef,
@@ -24,10 +26,8 @@ const buttonVariants = cva(
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         danger:
           'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-        success:
-          'bg-success text-success-foreground hover:bg-success/90',
-        warning:
-          'bg-warning text-warning-foreground hover:bg-warning/90',
+        success: 'bg-success text-success-foreground hover:bg-success/90',
+        warning: 'bg-warning text-warning-foreground hover:bg-warning/90',
         link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {
@@ -91,7 +91,8 @@ export type ButtonProps<C extends React.ElementType = 'button'> =
  * <Button loading>Loading...</Button>
  * <Button as="a" href="/link">Link Button</Button>
  */
-export const Button = forwardRef((
+export const Button = forwardRef(
+  <C extends React.ElementType = 'button'>(
     {
       as,
       variant,
@@ -107,34 +108,20 @@ export const Button = forwardRef((
       disabled,
       onClick,
       ...props
-    }: ButtonProps<any>,
-    ref?: PolymorphicRef<any>
+    }: ButtonProps<C>,
+    ref?: PolymorphicRef<C>
   ) => {
     const Component = as || 'button'
-    const [ripples, setRipples] = useState<
-      Array<{ x: number; y: number; id: number }>
-    >([])
+    const { ripples, createRipple } = useRipple()
 
     const handleClick = (
       e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>
     ) => {
       if (enableRipple && !disabled && !loading) {
-        const rect = e.currentTarget.getBoundingClientRect()
-        const x = e.clientX - rect.left
-        const y = e.clientY - rect.top
-        const id = Date.now()
-
-        setRipples((prev) => [...prev, { x, y, id }])
-
-        // Remove ripple after animation
-        setTimeout(() => {
-          setRipples((prev) => prev.filter((ripple) => ripple.id !== id))
-        }, 600)
+        createRipple(e as React.MouseEvent<HTMLElement>)
       }
 
-      if (onClick) {
-        onClick(e as any)
-      }
+      onClick?.(e as React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>)
     }
 
     return (
@@ -165,28 +152,7 @@ export const Button = forwardRef((
           ))}
 
         {/* Loading spinner */}
-        {loading && (
-          <svg
-            className="h-4 w-4 animate-spin"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            />
-          </svg>
-        )}
+        {loading && <SpinnerIcon className="h-4 w-4 animate-spin" />}
 
         {/* Left icon */}
         {!loading && leftIcon && <span>{leftIcon}</span>}
@@ -198,10 +164,14 @@ export const Button = forwardRef((
         {!loading && rightIcon && <span>{rightIcon}</span>}
       </Component>
     )
-  }) as <C extends React.ElementType = 'button'>(
-  props: ButtonProps<C>
-) => React.ReactElement
+  }
+) as {
+  <C extends React.ElementType = 'button'>(
+    props: ButtonProps<C>
+  ): React.ReactElement
+  displayName?: string
+}
 
-;(Button as any).displayName = 'Button'
+Button.displayName = 'Button'
 
 export { buttonVariants }

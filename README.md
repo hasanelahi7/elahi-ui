@@ -8,11 +8,11 @@ A modern, accessible React component library built with TypeScript and Tailwind 
 ## Features
 
 - **15 Production-Ready Components** - Modern, clean UI components
-- **100% Pure Tailwind CSS** - No third-party UI library dependencies
 - **Full TypeScript Support** - Complete type safety and IntelliSense
-- **Accessibility First** - WCAG compliant with proper ARIA attributes
+- ♿ **Accessibility First** - WCAG compliant with proper ARIA attributes
 - **Dark Mode Built-in** - Seamless theme switching
 - **Tree-Shakeable** - Only import what you need
+- **Custom Hooks** - Reusable hooks for common patterns
 
 ## Installation
 
@@ -28,8 +28,38 @@ npm install react react-dom
 
 ## Quick Start
 
+### 1. Configure Tailwind CSS
+
+Add elahi-ui to your `tailwind.config.js`:
+
+```js
+export default {
+  content: [
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/elahi-ui/dist/**/*.{js,mjs}",
+  ],
+  // ...
+}
+```
+
+### 2. Import Styles
+
 ```tsx
-import 'elahi-ui/dist/style.css'
+// In your main.tsx or App.tsx
+import 'elahi-ui/styles'
+```
+
+Add Tailwind to your CSS:
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+### 3. Use Components
+
+```tsx
 import { Button, Card, CardHeader, CardTitle, CardContent } from 'elahi-ui'
 
 function App() {
@@ -62,6 +92,7 @@ function App() {
 - **Card** - Flexible card with compound pattern
 - **Badge** - Status indicators
 - **Avatar** - User avatars with status
+- **Table** - Sorting, pagination, expandable rows
 - **Tabs** - Tabbed interfaces
 
 ### Feedback
@@ -69,16 +100,32 @@ function App() {
 - **Modal** - Dialogs and modals
 - **Tooltip** - Hover tooltips
 
-## Theming
+## Custom Hooks
 
 ```tsx
-// Enable dark mode
+import {
+  useMediaQuery,
+  useClickOutside,
+  useDisclosure,
+  useRipple,
+  useFocusTrap,
+} from 'elahi-ui'
+
+const isMobile = useMediaQuery('(max-width: 768px)')
+const { isOpen, open, close, toggle } = useDisclosure()
+```
+
+## Theming
+
+### Dark Mode
+
+```tsx
 <html className="dark">
   <body>{/* Your app */}</body>
 </html>
 ```
 
-Customize colors with CSS variables:
+### Customize Colors
 
 ```css
 :root {
@@ -90,20 +137,6 @@ Customize colors with CSS variables:
   --primary: 217.2 91.2% 59.8%;
   --primary-foreground: 222.2 47.4% 11.2%;
 }
-```
-
-## Hooks
-
-```tsx
-import {
-  useMediaQuery,
-  useClickOutside,
-  useDisclosure,
-  useControllableState,
-} from 'elahi-ui/hooks'
-
-const isMobile = useMediaQuery('(max-width: 768px)')
-const { isOpen, open, close, toggle } = useDisclosure()
 ```
 
 ## Development

@@ -1,6 +1,7 @@
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef, useState, useMemo } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/utils/cn'
+import { generateId } from '@/utils/id'
 
 const inputVariants = cva(
   'flex w-full rounded-md border bg-background text-sm transition-all file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
@@ -100,7 +101,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       value ? String(value).length : 0
     )
 
-    const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`
+    // Memoize ID to prevent regeneration on every render
+    const inputId = useMemo(() => id || generateId('input'), [id])
     const hasValue = value !== undefined && value !== ''
     const showFloatingLabel = floatingLabel && (isFocused || hasValue)
 

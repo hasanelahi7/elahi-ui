@@ -55,13 +55,28 @@ export type { BadgeProps } from './components/Badge'
 export { Avatar, avatarVariants } from './components/Avatar'
 export type { AvatarProps } from './components/Avatar'
 
+export { Table } from './components/Table'
+export type { TableProps, Column } from './components/Table'
+
 // Utilities
-export { cn } from './utils/cn'
+export { cn, generateId } from './utils'
 export type {
   PolymorphicComponentProps,
   PolymorphicComponentPropsWithRef,
   PolymorphicRef,
 } from './utils/polymorphic'
+
+// Icons (optional - users can import from components/Icons if needed)
+export {
+  SpinnerIcon,
+  CloseIcon,
+  ChevronDownIcon,
+  CheckIcon,
+  AlertCircleIcon,
+  AlertTriangleIcon,
+  InfoIcon,
+} from './components/Icons'
+export type { IconProps } from './components/Icons'
 
 // Hooks
 export {
@@ -69,8 +84,14 @@ export {
   useClickOutside,
   useDisclosure,
   useControllableState,
+  useRipple,
+  useFocusTrap,
+  useLockBodyScroll,
 } from './hooks'
 export type {
   UseDisclosureReturn,
   UseControllableStateProps,
 } from './hooks'
+
+// Constants
+export { ANIMATION_DURATION, KEYBOARD_KEYS } from './constants'

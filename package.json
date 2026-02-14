@@ -21,16 +21,20 @@
       "types": "./dist/types/utils/index.d.ts",
       "import": "./dist/esm/utils/index.js",
       "require": "./dist/cjs/utils/index.js"
-    }
+    },
+    "./styles": "./dist/styles/globals.css"
   },
   "files": [
     "dist",
     "README.md"
   ],
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build && npm run copy-styles",
+    "copy-styles": "mkdir -p dist/styles && cp src/styles/globals.css dist/styles/",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",

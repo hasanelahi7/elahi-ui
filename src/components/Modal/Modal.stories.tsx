@@ -16,7 +16,7 @@ export default meta
 type Story = StoryObj
 
 export const Default: Story = {
-  render: () => {
+  render: function DefaultStory() {
     const [isOpen, setIsOpen] = useState(false)
     return (
       <>
@@ -35,7 +35,7 @@ export const Default: Story = {
 }
 
 export const WithCompoundComponents: Story = {
-  render: () => {
+  render: function WithCompoundComponentsStory() {
     const [isOpen, setIsOpen] = useState(false)
     return (
       <>
@@ -64,7 +64,7 @@ export const WithCompoundComponents: Story = {
 }
 
 export const SmallSize: Story = {
-  render: () => {
+  render: function SmallSizeStory() {
     const [isOpen, setIsOpen] = useState(false)
     return (
       <>
@@ -82,7 +82,7 @@ export const SmallSize: Story = {
 }
 
 export const LargeSize: Story = {
-  render: () => {
+  render: function LargeSizeStory() {
     const [isOpen, setIsOpen] = useState(false)
     return (
       <>
@@ -104,7 +104,7 @@ export const LargeSize: Story = {
 }
 
 export const NoCloseButton: Story = {
-  render: () => {
+  render: function NoCloseButtonStory() {
     const [isOpen, setIsOpen] = useState(false)
     return (
       <>
@@ -125,7 +125,7 @@ export const NoCloseButton: Story = {
 }
 
 export const PreventClose: Story = {
-  render: () => {
+  render: function PreventCloseStory() {
     const [isOpen, setIsOpen] = useState(false)
     return (
       <>
@@ -149,7 +149,7 @@ export const PreventClose: Story = {
 }
 
 export const WithForm: Story = {
-  render: () => {
+  render: function WithFormStory() {
     const [isOpen, setIsOpen] = useState(false)
     return (
       <>

@@ -22,7 +22,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
   ({ content, position = 'top', delay = 200, className, children, ...props }, ref) => {
     const [isVisible, setIsVisible] = useState(false)
     const [coords, setCoords] = useState({ x: 0, y: 0 })
-    const timeoutRef = useRef<NodeJS.Timeout>()
+    const timeoutRef = useRef<ReturnType<typeof setTimeout>>()
     const triggerRef = useRef<HTMLDivElement>(null)
 
     const showTooltip = () => {
@@ -105,7 +105,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
               top: `${coords.y}px`,
             }}
             className={cn(
-              'z-50 rounded-md bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md',
+              'z-50 rounded-md bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md border border-border',
               'pointer-events-none animate-fade-in',
               positionClasses[position],
               className

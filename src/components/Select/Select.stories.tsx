@@ -35,7 +35,7 @@ const countries = [
 ]
 
 export const Default: Story = {
-  render: () => {
+  render: function DefaultStory() {
     const [value, setValue] = useState('')
     return (
       <Select
@@ -50,7 +50,7 @@ export const Default: Story = {
 }
 
 export const WithLabel: Story = {
-  render: () => {
+  render: function WithLabelStory() {
     const [value, setValue] = useState('')
     return (
       <Select
@@ -66,7 +66,7 @@ export const WithLabel: Story = {
 }
 
 export const Searchable: Story = {
-  render: () => {
+  render: function SearchableStory() {
     const [value, setValue] = useState('')
     return (
       <Select
@@ -83,7 +83,7 @@ export const Searchable: Story = {
 }
 
 export const WithHelperText: Story = {
-  render: () => {
+  render: function WithHelperTextStory() {
     const [value, setValue] = useState('')
     return (
       <Select
@@ -100,7 +100,7 @@ export const WithHelperText: Story = {
 }
 
 export const WithError: Story = {
-  render: () => {
+  render: function WithErrorStory() {
     const [value, setValue] = useState('')
     return (
       <Select
@@ -129,7 +129,7 @@ export const Disabled: Story = {
 }
 
 export const PreSelected: Story = {
-  render: () => {
+  render: function PreSelectedStory() {
     const [value, setValue] = useState('us')
     return (
       <Select
@@ -144,7 +144,7 @@ export const PreSelected: Story = {
 }
 
 export const WithDisabledOptions: Story = {
-  render: () => {
+  render: function WithDisabledOptionsStory() {
     const [value, setValue] = useState('')
     const optionsWithDisabled = [
       { value: 'us', label: 'United States' },

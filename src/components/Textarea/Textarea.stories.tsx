@@ -64,7 +64,7 @@ export const WithRows: Story = {
 }
 
 export const MaxLength: Story = {
-  render: () => {
+  render: function MaxLengthStory() {
     const maxLength = 150
     const [value, setValue] = useState('')
 
@@ -150,7 +150,7 @@ export const Resizable: Story = {
 }
 
 export const AutoGrow: Story = {
-  render: () => {
+  render: function AutoGrowStory() {
     const [value, setValue] = useState('')
 
     return (

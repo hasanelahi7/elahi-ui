@@ -1,5 +1,8 @@
 import React, { forwardRef, useEffect, useRef } from 'react'
 import { cn } from '@/utils/cn'
+import { useFocusTrap, useLockBodyScroll } from '@/hooks'
+import { CloseIcon } from '@/components/Icons'
+import { KEYBOARD_KEYS } from '@/constants'
 
 export interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Whether modal is open */
@@ -39,12 +42,18 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
   ) => {
     const modalRef = useRef<HTMLDivElement>(null)
 
+    // Lock body scroll when modal is open
+    useLockBodyScroll(open)
+
+    // Trap focus within modal
+    useFocusTrap(modalRef, open, true)
+
     // Handle ESC key
     useEffect(() => {
       if (!open) return
 
       const handleEsc = (e: KeyboardEvent) => {
-        if (e.key === 'Escape' && !preventClose) {
+        if (e.key === KEYBOARD_KEYS.ESCAPE && !preventClose) {
           onClose()
         }
       }
@@ -52,52 +61,6 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
       document.addEventListener('keydown', handleEsc)
       return () => document.removeEventListener('keydown', handleEsc)
     }, [open, onClose, preventClose])
-
-    // Prevent body scroll
-    useEffect(() => {
-      if (open) {
-        document.body.style.overflow = 'hidden'
-      } else {
-        document.body.style.overflow = ''
-      }
-
-      return () => {
-        document.body.style.overflow = ''
-      }
-    }, [open])
-
-    // Focus trap
-    useEffect(() => {
-      if (!open || !modalRef.current) return
-
-      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      )
-
-      const firstElement = focusableElements[0]
-      const lastElement = focusableElements[focusableElements.length - 1]
-
-      firstElement?.focus()
-
-      const handleTab = (e: KeyboardEvent) => {
-        if (e.key !== 'Tab') return
-
-        if (e.shiftKey) {
-          if (document.activeElement === firstElement) {
-            lastElement?.focus()
-            e.preventDefault()
-          }
-        } else {
-          if (document.activeElement === lastElement) {
-            firstElement?.focus()
-            e.preventDefault()
-          }
-        }
-      }
-
-      document.addEventListener('keydown', handleTab)
-      return () => document.removeEventListener('keydown', handleTab)
-    }, [open])
 
     if (!open) return null
 
@@ -127,12 +90,15 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
             if (typeof ref === 'function') {
               ref(node)
             } else if (ref) {
-              (ref as any).current = node
+              ref.current = node
             }
-            (modalRef as any).current = node
+            // Update internal ref
+            if (modalRef.current !== node) {
+              (modalRef as React.MutableRefObject<HTMLDivElement | null>).current = node
+            }
           }}
           className={cn(
-            'relative z-10 w-full rounded-lg bg-background p-6 shadow-xl animate-scale-in',
+            'relative z-10 w-full rounded-lg bg-popover border border-border p-6 shadow-xl animate-scale-in',
             sizeClasses[size],
             className
           )}
@@ -144,20 +110,9 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
             <button
               onClick={onClose}
               className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              aria-label="Close modal"
             >
-              <svg
-                className="h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
+              <CloseIcon className="h-4 w-4" />
               <span className="sr-only">Close</span>
             </button>
           )}
