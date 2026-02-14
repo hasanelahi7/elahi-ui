@@ -1,6 +1,6 @@
 {
   "name": "elahi-ui",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A flexible, accessible, modern React component library with TypeScript",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -22,11 +22,13 @@
       "import": "./dist/utils.js",
       "require": "./dist/utils.cjs"
     },
-    "./styles": "./dist/styles/globals.css"
+    "./styles": "./dist/styles/globals.css",
+    "./tailwind": "./tailwind.preset.js"
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "tailwind.preset.js"
   ],
   "sideEffects": [
     "**/*.css"

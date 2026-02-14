@@ -13,6 +13,12 @@ A modern, accessible React component library built with TypeScript and Tailwind 
 - **Dark Mode Built-in** - Seamless theme switching
 - **Tree-Shakeable** - Only import what you need
 - **Custom Hooks** - Reusable hooks for common patterns
+- **Tailwind Preset Included** - Easy setup with pre-configured theme
+
+## Requirements
+
+- React 18+
+- Tailwind CSS 3.4+
 
 ## Installation
 
@@ -20,17 +26,34 @@ A modern, accessible React component library built with TypeScript and Tailwind 
 npm install elahi-ui
 ```
 
-### Peer Dependencies
+You'll also need Tailwind CSS (if you don't have it already):
 
 ```bash
-npm install react react-dom
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
 ```
 
 ## Quick Start
 
 ### 1. Configure Tailwind CSS
 
-Add elahi-ui to your `tailwind.config.js`:
+**Option A: Using Preset (Recommended)**
+
+Import the elahi-ui Tailwind preset in your `tailwind.config.js`:
+
+```js
+import elahiPreset from 'elahi-ui/tailwind'
+
+export default {
+  presets: [elahiPreset],
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
+  // Your custom config here
+}
+```
+
+**Option B: Manual Configuration**
+
+Add elahi-ui to your content array and extend your theme:
 
 ```js
 export default {
@@ -38,18 +61,35 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
     "./node_modules/elahi-ui/dist/**/*.{js,mjs}",
   ],
-  // ...
+  theme: {
+    extend: {
+      colors: {
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        // ... see tailwind.preset.js for full config
+      },
+    },
+  },
 }
 ```
 
 ### 2. Import Styles
+
+Add the CSS variables to your app:
 
 ```tsx
 // In your main.tsx or App.tsx
 import 'elahi-ui/styles'
 ```
 
-Add Tailwind to your CSS:
+Ensure Tailwind directives are in your CSS:
 
 ```css
 @tailwind base;
